@@ -25,7 +25,7 @@ def split_video(INPUT="", OUTPUT="", START="0.0", DURATION="0.0"):
     if INPUT == "" or OUTPUT == "" or DURATION == "0.0":
         logging.exception("*** Cutting the video :: Argument setting incorrect ***")
     else:
-        command = "ffmpeg -ss " + START + " -i " + INPUT + " -t " + DURATION + " -r 10 " + OUTPUT
+        command = "ffmpeg -y -ss " + START + " -i " + INPUT + " -t " + DURATION + " -r 10 " + OUTPUT
         #command = "ffmpeg -ss " + START + " -i " + INPUT + " -t " + DURATION + " -r 10 -c:v copy " + OUTPUT
         print("Command >> {}".format(command))
         subprocess.run(command, shell=True)
@@ -33,7 +33,7 @@ def split_video(INPUT="", OUTPUT="", START="0.0", DURATION="0.0"):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dir', '-d', type=str, default='/mnt/aoni02/katayama/dataset/RawDATA/',
+    parser.add_argument('--dir', '-i', type=str, default='/mnt/aoni02/katayama/dataset/RawDATA/',
                         help='specify the conversaton folder PATH')
     parser.add_argument('--out', '-o', type=str, default='/mnt/aoni02/katayama/dataset/DATA2019/mp4/',
                         help='specify the label output folder PATH')
@@ -42,6 +42,8 @@ if __name__ == '__main__':
     print('Output Folder : {}'.format(args.out))
     directory = os.path.join(args.dir,'*')
     output = args.out
+    if not os.path.isdir(output):
+        os.mkdir(output)
 
     folders = sorted(glob.glob(directory))
     for dir in folders:

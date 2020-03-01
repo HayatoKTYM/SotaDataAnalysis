@@ -27,15 +27,19 @@ def split_eyeimage(movie_file,out,align):
 
     """
     #movie -> image
-    split_png(movie_file,out)
+    path = os.path.join(out,movie_file.split("/")[-1].split(".")[0])
+
+    split_png(movie_file,path)
     #image -> face & eye image
-    path = out.replace('img', 'face', 1)
-    if not os.path.exists(path):
-        os.mkdir(path)
-    path = out.replace('img', 'eye', 1)
-    if not os.path.exists(path):
-        os.mkdir(path)
-    for f in glob.glob(os.path.join(out,'/*png')):
+
+    facepath = path.replace('img', 'face', 1)
+    if not os.path.exists(facepath):
+        os.mkdir(facepath)
+    eyepath = path.replace('img', 'eye', 1)
+    if not os.path.exists(eyepath):
+        os.mkdir(eyepath)
+
+    for f in sorted(glob.glob(os.path.join(path,'*png'))):
         face, eye = getRep(f,align=align)
         cv2.imwrite(f.replace('img', 'face'), face)
         cv2.imwrite(f.replace('img', 'eye'), eye)
@@ -48,11 +52,10 @@ def split_png(f,out):
     return save path
     """
 
-    folder = os.path.join(out, f.split("/")[-1].split(".")[0])
-    if not os.path.exists(folder):
-        os.mkdir(folder)
+    if not os.path.exists(out):
+        os.mkdir(out)
 
-    command = "ffmpeg -i " + f + " -ss 0 -r 10 -f image2 " + folder + "/%05d.png"  # 0秒からフレームレート10でpngとして取り出す
+    command = "ffmpeg -i " + f + " -ss 0 -r 10 -f image2 " + out + "/%05d.png"  # 0秒からフレームレート10でpngとして取り出す
     subprocess.run(command, shell=True)
     print(command)
     return 1
@@ -100,6 +103,9 @@ if __name__ == '__main__':
     output = args.out
     if not os.path.isdir(output):
         os.mkdir(output)
+        os.mkdir(output.replace('/img','/face'))
+        os.mkdir(output.replace('/img','/eye'))
+
     modelDir = os.path.join(args.model)
     dlibModelDir = os.path.join(modelDir, 'dlib')
     openfaceModelDir = os.path.join(modelDir, 'openface')
