@@ -70,7 +70,7 @@ if __name__ == '__main__':
     lld_files = sorted(glob(os.path.join(output,'*csv')))
     for i in range(0,len(lld_files),2):
         df = concat_lld(INPUT_A = lld_files[i],INPUT_B = lld_files[i+1])
-        if not os.path.isdir(output.replace('/lld','/LLD')):
-            os.mkdir(output.replace('/lld','/LLD'))
+        if not os.path.isdir(output.replace('/lld','/lld_all')):
+            os.mkdir(output.replace('/lld','/lld_all'))
         df.to_csv(lld_files[i].replace('.A','.LLD').replace('/lld/','/lld_all/'),index=False)
         print('generated>>',lld_files[i])
