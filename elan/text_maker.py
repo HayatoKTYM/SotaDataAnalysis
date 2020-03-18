@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 
-PATH = '/Volumes/Samsung_T5/prj-woz/data/20200308'
+PATH = '/Volumes/Samsung_T5/prj-woz/data/20200222'
 vad_files = sorted(glob(os.path.join(PATH,'vad/*csv')))
 label_files = sorted(glob(os.path.join(PATH,'label/*csv')))
 #vad_files = sorted(glob('/Volumes/Samsung_T5/prj-woz/data/vad/*csv'))
@@ -14,7 +14,8 @@ for vf, lf in zip(vad_files,label_files):
     print(lf)
     df = pd.read_csv(lf)
     output = vf.split('/')[-1].split('.cs')[0]
-    f = open('/Users/hayato/Desktop/ELAN/text/{}.txt'.format(output),'w')
+    os.makedirs('/Volumes/Samsung_T5/prj-woz/data/text',exist_ok=True)
+    f = open('/Volumes/Samsung_T5/prj-woz/data/text/{}.txt'.format(output),'w')
     start = 0
     nod_flag = False
     act_flag = False
